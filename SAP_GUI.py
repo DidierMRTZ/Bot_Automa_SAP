@@ -10,8 +10,6 @@ import pywintypes
 from pywinauto.application import Application
 import pyautogui
 #Iniciar sesión
-user="auxnvospt"
-password="Lanzamientos10"
 # Input= Usuario y contraseña y output= session
 def SessionSAP(user,password):
    path = "C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\saplogon.exe"
