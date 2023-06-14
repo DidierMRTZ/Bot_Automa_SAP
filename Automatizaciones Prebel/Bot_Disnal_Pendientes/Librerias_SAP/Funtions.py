@@ -36,6 +36,8 @@ def default_column(default_columns,dataframe):     #Parametros (default_columns:
     return(dataframe)
 
 
+
+
 # Ecluir Agenda de pedidos exito
 
 def Datos_Agenda(data_pedido,Agenda):   #(data_pedido: columna dataframe a transformar, Agenda: Datos a encontrar)
