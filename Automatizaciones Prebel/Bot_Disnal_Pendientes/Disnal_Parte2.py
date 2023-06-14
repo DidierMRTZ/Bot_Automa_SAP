@@ -18,8 +18,9 @@ import dash_bootstrap_components as dbc
 
 """----------------------------Inciar session----------------------------------------------------"""
 # Insert User name and password
-user="jespinosap"
-password="Digital2023*"
+Keys=pd.read_excel("C:\\Users\\prac.ingindustrial2\\OneDrive - Prebel S.A\\Escritorio\\SAP\\Claves\\Keys.xlsx")
+user=Keys["User"][0]
+password=Keys["Password"][0]
 # Initialize session
 session=SAP_GUI.SessionSAP(user,password)
 
