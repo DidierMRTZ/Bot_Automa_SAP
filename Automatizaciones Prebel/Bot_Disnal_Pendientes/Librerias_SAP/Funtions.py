@@ -36,7 +36,13 @@ def default_column(default_columns,dataframe):     #Parametros (default_columns:
     return(dataframe)
 
 
-
+#Limpiar colummna a numeros
+def Clean_Num_List(*args):
+    lista=[]
+    for arg in args:
+        args=arg.apply(lambda x: float(str(x).strip().replace(',','')))
+        lista.append(args)
+    return(tuple(lista))
 
 # Ecluir Agenda de pedidos exito
 

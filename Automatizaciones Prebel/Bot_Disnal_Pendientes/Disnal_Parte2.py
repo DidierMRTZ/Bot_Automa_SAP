@@ -2,7 +2,7 @@ from dash import Dash, dash_table, dcc, html
 from dash.dependencies import Input, Output
 import pandas as pd
 from flask import Flask
-import SAP_GUI
+from Librerias_SAP import SAP_GUI
 import pandas as pd
 import re
 from collections import OrderedDict
