@@ -15,7 +15,6 @@ import numpy as np
 import dash_bootstrap_components as dbc
 
 
-
 """----------------------------Inciar session----------------------------------------------------"""
 # Insert User name and password
 Keys=pd.read_excel("C:\\Users\\prac.ingindustrial2\\OneDrive - Prebel S.A\\Escritorio\\SAP\\Claves\\Keys.xlsx")

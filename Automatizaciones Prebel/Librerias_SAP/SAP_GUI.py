@@ -11,6 +11,8 @@ from pywinauto.application import Application
 import pyautogui
 #Iniciar sesión
 # Input= Usuario y contraseña y output= session
+
+password=None
 def SessionSAP(user,password):
    path = "C:\\Program Files (x86)\\SAP\\FrontEnd\\SAPgui\\saplogon.exe"
    subprocess.Popen(path)
