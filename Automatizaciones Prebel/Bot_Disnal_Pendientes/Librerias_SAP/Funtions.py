@@ -42,7 +42,22 @@ def Clean_Num_List(*args):
     for arg in args:
         args=arg.apply(lambda x: float(str(x).strip().replace(',','')))
         lista.append(args)
-    return(tuple(lista))
+    if len(lista)==1:
+        return lista[0]
+    else:
+        return(tuple(lista))
+
+#Limpiar colummna a numeros
+def Clean_int_to_str(*args):
+    lista=[]
+    for arg in args:
+        args=arg.astype(int).astype(str)
+        lista.append(args)
+    if len(lista)==1:
+        return lista[0]
+    else:
+        return(tuple(lista))
+
 
 # Ecluir Agenda de pedidos exito
 

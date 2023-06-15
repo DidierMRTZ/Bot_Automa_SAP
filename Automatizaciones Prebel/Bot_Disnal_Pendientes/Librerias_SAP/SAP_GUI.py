@@ -291,6 +291,7 @@ def Download_ZSD110_Channels(tabla_zsd110,Download_channel,session):
 
 
 # Buscar ZSD037
+
 def Search_Pedidos_ZSD037(Transsaccion,Series,session,provision=None):      #(column Dataframe)
     """
     Transsaccion: Transsacion a buscar
