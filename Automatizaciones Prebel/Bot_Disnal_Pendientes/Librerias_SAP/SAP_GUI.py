@@ -288,3 +288,21 @@ def Download_ZSD110_Channels(tabla_zsd110,Download_channel,session):
         except:
             print("No se encontro ",channelID)
     return(List_Channels)
+
+
+# Buscar ZSD037
+def Search_Pedidos_ZSD037(Transsaccion,Series,session,provision=None):      #(column Dataframe)
+    """
+    Transsaccion: Transsacion a buscar
+    Series: Columna del dataframe que quiero copiar
+    session: session del usuario
+    provision: disposicion de interes
+    """
+    session.StartTransaction(Transsaccion)
+    Series=Series.to_clipboard(index=False, header=False)
+    session.findById("wnd[0]/usr/btn%_SP$00011_%_APP_%-VALU_PUSH").press()
+    session.findById("wnd[1]/tbar[0]/btn[24]").press()
+    session.findById("wnd[1]/tbar[0]/btn[8]").press()
+    if provision!=None:
+        session.findById("wnd[0]/usr/ctxt%LAYOUT").text = provision
+    session.findById("wnd[0]/tbar[1]/btn[8]").press()

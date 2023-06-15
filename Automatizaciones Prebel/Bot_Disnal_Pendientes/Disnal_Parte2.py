@@ -178,6 +178,12 @@ Transsaccion_ZSD037="zsd037"
 
 
 def Search_Pedidos_ZSD037(Transsaccion,Series,session,provision=None):      #(column Dataframe)
+    """
+    Transsaccion: Transsacion a buscar
+    Series: Columna del dataframe que quiero copiar
+    session: session del usuario
+    provision: disposicion de interes
+    """
     session.StartTransaction(Transsaccion)
     Series=Series.to_clipboard(index=False, header=False)
     session.findById("wnd[0]/usr/btn%_SP$00011_%_APP_%-VALU_PUSH").press()
