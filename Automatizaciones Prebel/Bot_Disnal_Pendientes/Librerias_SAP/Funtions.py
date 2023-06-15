@@ -1,5 +1,5 @@
 import re
-
+import json
 
 """----------------------------------------------CLEAN COLUMN AND DATA-----------------------------------------------------------"""
 def Clean_Columns(List):
@@ -60,3 +60,20 @@ def Search_agenda(data_Pedidos,agenda):
         if re.findall("(\d*)-",str(i))!=[] and (re.findall("(\d*)-",str(i))[0] in agenda):
             conjunto_agenda.add(i)
     return(conjunto_agenda)
+
+# lista json de channles
+
+def list_to_json(List_Channels,path=None):
+    """
+    - List_Channels: Recibe lista de canales
+    - path: ruta del archivo .json para exportar (Default: None no exporta)
+    """
+    dic={}
+    for i in List_Channels: dic["Channels "+i]=i
+    if path==None:
+        return(json.dumps(dic))
+    else:
+        with open(path, "w") as archivo:
+            # Escribir datos en formato JSON
+            json.dump(dic, archivo)
+        return(json.dumps(dic))
