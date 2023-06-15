@@ -249,3 +249,36 @@ def Search_ZSD110(Transsaccion,variant,provision,session):  #Optiene la tabla al
     session.findById("wnd[0]/tbar[1]/btn[8]").press()
     tabla_zsd110=session.findById("wnd[0]/usr/cntlGRID1/shellcont/shell")     #Select table cont
     return(tabla_zsd110)
+
+"""-------------------------------------------Donwload channels Pendiente y Entrega----------------------"""
+def Download_ZSD110_Channels(tabla_zsd110,Download_channel,session): #tabla:tabla anterior zsd110, Download_channel:lista canales entrega
+    row_table=tabla_zsd110.RowCount
+    List_Channels=[]
+    for i in range(0,row_table-1):  #Se resta uno por los subtotales
+        channelID=tabla_zsd110.GetCellValue(i,"VTWEG")
+        tabla_zsd110.selectedRows = str(i)
+        try:
+            if channelID in Download_channel:
+                session.findById("wnd[0]/tbar[1]/btn[8]").press()
+                session.findById("wnd[1]/tbar[0]/btn[45]").press()
+                session.findById("wnd[1]/usr/subSUBSCREEN_STEPLOOP:SAPLSPO5:0150/sub:SAPLSPO5:0150/radSPOPLI-SELFLAG[1,0]").select()
+                session.findById("wnd[1]/tbar[0]/btn[0]").press()
+                session.findById("wnd[1]/usr/ctxtDY_PATH").text = "C:\\Users\\prac.ingindustrial2\\OneDrive - Prebel S.A\\Escritorio\\SAP\\Archivos_CSV\\"   #CAMBIAR RUTA
+                session.findById("wnd[1]/usr/ctxtDY_FILENAME").text = "Canal"+str(channelID)+"_ENT.txt"
+                session.findById("wnd[1]/usr/ctxtDY_FILE_ENCODING").text = "4310"
+                session.findById("wnd[1]/tbar[0]/btn[11]").press()
+                session.findById("wnd[1]").close()
+            session.findById("wnd[0]/tbar[1]/btn[7]").press()   
+            session.findById("wnd[1]/tbar[0]/btn[45]").press()
+            session.findById("wnd[1]/usr/subSUBSCREEN_STEPLOOP:SAPLSPO5:0150/sub:SAPLSPO5:0150/radSPOPLI-SELFLAG[1,0]").select()
+            session.findById("wnd[1]/tbar[0]/btn[0]").press()
+            session.findById("wnd[1]/usr/ctxtDY_PATH").text = "C:\\Users\\prac.ingindustrial2\\OneDrive - Prebel S.A\\Escritorio\\SAP\\Archivos_CSV\\"   #CAMBIAR RUTA
+            session.findById("wnd[1]/usr/ctxtDY_FILENAME").text = "Canal"+str(channelID)+"_PEN.txt"
+            session.findById("wnd[1]/usr/ctxtDY_FILE_ENCODING").text = "4310"
+            session.findById("wnd[1]/tbar[0]/btn[11]").press()
+            session.findById("wnd[1]").close()
+            List_Channels.append(channelID)
+            print("Se encontro detalle Channel ",channelID)
+        except:
+            print("No se encontro ",channelID)
+    return(List_Channels)
