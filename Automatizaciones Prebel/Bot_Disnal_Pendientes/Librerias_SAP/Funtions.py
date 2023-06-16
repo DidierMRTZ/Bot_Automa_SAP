@@ -92,3 +92,11 @@ def list_to_json(List_Channels,path=None):
             # Escribir datos en formato JSON
             json.dump(dic, archivo)
         return(json.dumps(dic))
+    
+# Estandarizar datos de dias para SAP
+
+def stand_day(day):
+    day=str(day).split("-")
+    day.reverse()
+    day=".".join(day)
+    return(day)
