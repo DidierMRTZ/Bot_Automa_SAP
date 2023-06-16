@@ -183,7 +183,7 @@ def Export_TXT2(Name,session,Ruta=None):
         session.findById("wnd[1]/usr/subSUBSCREEN_STEPLOOP:SAPLSPO5:0150/sub:SAPLSPO5:0150/radSPOPLI-SELFLAG[1,0]").select()
         session.findById("wnd[1]/tbar[0]/btn[0]").press()
         if Ruta==None:
-            session.findById("wnd[1]/usr/ctxtDY_PATH").text = "C:\\Users\\prac.ingindustrial2\\OneDrive - Prebel S.A\\Documentos 1\\SAP\\SAP GUI\\"
+            session.findById("wnd[1]/usr/ctxtDY_PATH").text = "C:\\Users\\prac.ingindustrial2\\OneDrive - Prebel S.A\\Escritorio\\SAP\\Archivos_CSV\\"
         else:
             session.findById("wnd[1]/usr/ctxtDY_PATH").text = Ruta
         session.findById("wnd[1]/usr/ctxtDY_FILENAME").text = str(Name) + ".txt"

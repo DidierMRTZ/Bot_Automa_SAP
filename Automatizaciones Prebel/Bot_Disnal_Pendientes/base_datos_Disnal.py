@@ -19,7 +19,6 @@ Varian_MERCADEO="PEN-MERCADEO"
 Varian_DISNAL_TOTAL="PENDIENTES"
 provision_ZSD110="/REVISIONPEN"
 
-
 """-----------------------------------BUSCAR y DESCARGAR TRANSSACCION ZD110---------------------------------------------------------------- """
 # Pendiente Firme
 Name_ZSD110_FIRME="Pendiente_Firme"  # Revisar suele no guardar
@@ -39,7 +38,6 @@ SAP_GUI.Export_TXT2(Name_ZSD110_TOTAL,session)
 # Descargar archivos Csv de chanales Pendiente y Entrega
 Download_channel=["01"]
 List_Channels=SAP_GUI.Download_ZSD110_Channels(tabla_Total,Download_channel,session)
-
 
 # Descargar json de los chanales
 ruta_archivo_json="C:\\Users\\prac.ingindustrial2\\OneDrive - Prebel S.A\\Escritorio\\SAP\\Archivos_CSV\\Channels.json"
