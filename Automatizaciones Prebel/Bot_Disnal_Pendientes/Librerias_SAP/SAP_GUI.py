@@ -307,3 +307,31 @@ def Search_Pedidos_ZSD037(Transsaccion,Series,session,provision=None):      #(co
     if provision!=None:
         session.findById("wnd[0]/usr/ctxt%LAYOUT").text = provision
     session.findById("wnd[0]/tbar[1]/btn[8]").press()
+
+
+
+
+def Search_ZSD035D(Transsaccion,session,provision,date,variant):
+    """
+    Transsaccion: transaccion a buscar
+    session: mantener seesion iniciada
+    provision: Disposición
+    date: dia de interes a buscar
+    variant: Variante a visualizar
+    """
+    session.StartTransaction(Transsaccion)
+    session.findById("wnd[0]/tbar[1]/btn[17]").press()
+    session.findById("wnd[1]/usr/txtV-LOW").text = provision
+    session.findById("wnd[1]/usr/txtENAME-LOW").text = variant
+    session.findById("wnd[1]/usr/txtV-LOW").caretPosition = 8
+    session.findById("wnd[1]/tbar[0]/btn[8]").press()
+    if date==None:
+        None
+    else:
+        session.findById("wnd[0]/usr/ctxtSP$00024-LOW").text = date
+    session.findById("wnd[0]/tbar[1]/btn[8]").press()
+    try:
+        table=session.findById("wnd[0]/usr/cntlCONTAINER/shellcont/shell")
+        return(table)
+    except:
+        return(session)
