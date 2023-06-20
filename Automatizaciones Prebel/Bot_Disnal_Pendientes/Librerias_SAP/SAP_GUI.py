@@ -335,3 +335,31 @@ def Search_ZSD035D(Transsaccion,session,provision,date,variant):
         return(table)
     except:
         return(session)
+    
+
+
+def Search_ZSD10(transsaccion,Series,variant,provision,session):
+    """
+    Transsaccion: Transsacion a buscar
+    Series: Columna del dataframe que quiero copiar
+    session: session del usuario
+    variant: Variante a buscar
+    provision: disposicion de interes
+    session: session activa
+    """
+    session.StartTransaction(transsaccion)
+    session.findById("wnd[0]/tbar[1]/btn[17]").press()
+    session.findById("wnd[1]/usr/txtV-LOW").text = provision
+    session.findById("wnd[1]/usr/txtENAME-LOW").text = variant
+    session.findById("wnd[1]/usr/txtV-LOW").caretPosition = 8
+    session.findById("wnd[1]/tbar[0]/btn[8]").press()
+    Series=Series.to_clipboard(index=False, header=False)
+    session.findById("wnd[0]/usr/btn%_SP$00013_%_APP_%-VALU_PUSH").press()
+    session.findById("wnd[1]/tbar[0]/btn[24]").press()
+    session.findById("wnd[1]/tbar[0]/btn[8]").press()
+    session.findById("wnd[0]/tbar[1]/btn[8]").press()
+    try:
+        tabla=session.findById("wnd[0]/usr/cntlCONTAINER/shellcont/shell")
+        return(tabla)
+    except:
+        return(session)
