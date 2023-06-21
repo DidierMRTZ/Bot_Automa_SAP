@@ -1,4 +1,4 @@
-import SAP_GUI
+from Librerias_SAP import SAP_GUI
 import win32com.client
 import pandas as pd
 import subprocess
@@ -258,7 +258,7 @@ send_emails(Send2.to_html(),Total_Materia,emails=correos,htmlbody=html2,subject=
 
 """-------------------------------------Send email material y granel vencidos--------------------------------"""
 
-correos="prac.ingindustrial2@prebel.com.co"
+correos="prac.ingindustrial2@prebel.com.co;juan.murillo@prebel.com.co"
 
 def send_emails(*args,emails="",htmlbody="",subject=""):
     email=emails
