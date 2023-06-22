@@ -60,12 +60,22 @@ data_GRANELES=Clean_Columns(data_GRANELES)
 
 default_column_MB52=['Material', 'Texto breve de material', 'Gpo.artíc.', 'Ce.', 'Alm.',
        'Lote', 'UMB', 'Libre utilización', 'En control calidad',
-       'Valor libre util.', 'Valor en insp.cal.', 'Cad./FPC']   #Disposicion PROXI A VENCER
+       'Valor libre util.', 'Valor en insp.cal.', 'Bloqueado',
+       'Stock no libre', 'Valor stock bloq.', 'Valor no libre', 'Cad./FPC'] #Disposicion PROXI A VENCER
 
 data_GRANELES=default_column(default_column_MB52,data_GRANELES) 
 
 
 data_GRANELES=Date_Null(data_GRANELES,data_GRANELES['Cad./FPC'])
+
+try:
+    data_GRANELES["Alm."]=data_GRANELES["Alm."].astype(int)
+    data_GRANELES["Lote"]=data_GRANELES["Lote"].astype(int)
+    data_GRANELES['Ce.']=data_GRANELES['Ce.'].astype(int)
+except:
+    None
+
+
 
 """-------------------------Filtro para eliminar subtotales y combertir fechas-------------------------------"""
 data_GRANELES=data_GRANELES[data_GRANELES.Material.notnull()]
@@ -106,16 +116,25 @@ data_Graneles_informe=data_GRANELES[['Material', 'Texto breve de material', 'Gpo
 
 
 data_Graneles_Vencidos_informe=data_GRANELES_vencidos[['Grupo art.', 'Denom.gr.artíc.', 'Material', 'Texto breve de material',
-       'Gpo.artíc.', 'Ce.', 'Alm.', 'Lote', 'UMB',
+       'Gpo.artíc.', 'Ce.', 'Alm.', 'Lote','Bloqueado','Stock no libre', 'UMB','Valor stock bloq.', 'Valor no libre',
        'Cad./FPC']]
 
 
-"""-----------------------------GENERO SUBTOTALES------------------------------------------------------------"""
+"""-----------------------------GENERO SUBTOTALES DE GRANELES------------------------------------------------------------"""
 
 data_GRANELES_Libre=Clean_column_number(data_GRANELES["Valor libre util."]).sum()
 data_GRANELES_Calidad=Clean_column_number(data_GRANELES['Valor en insp.cal.']).sum()
 Total_Graneles=data_GRANELES_Libre+data_GRANELES_Calidad
 Total_Graneles="${:,.2f}".format(Total_Graneles)
+
+
+"""-----------------------------GENERO SUBTOTALES DE GRANELES VENCIDOS--------------------------------------------------------"""
+data_GRANELES_Stock_Bloqueado=Clean_column_number(data_GRANELES_vencidos['Valor stock bloq.']).sum()
+data_GRANELES_No_Libre=Clean_column_number(data_GRANELES_vencidos['Valor no libre']).sum()
+Total_Graneles_Vencidos=data_GRANELES_Stock_Bloqueado+data_GRANELES_No_Libre
+Total_Graneles_Vencidos="${:,.2f}".format(Total_Graneles_Vencidos)
+
+
 
 
 """ Search MB52 raw material"""
@@ -138,6 +157,15 @@ data_Materias=pd.read_csv(Ruta_Materias,delimiter="\t")
 data_Materias=Clean_Columns(data_Materias)
 data_Materias=default_column(default_column_MB52,data_Materias) 
 data_Materias=Date_Null(data_Materias,data_Materias['Cad./FPC'])
+
+try:
+    # Change Float-Int
+    data_Materias["Alm."]=data_Materias["Alm."].astype(int)
+    data_Materias["Lote"]=data_Materias["Lote"].astype(int)
+    data_Materias['Ce.']=data_Materias['Ce.'].astype(int)
+except:
+    None
+
 
 
 """-------------------------Filtro para eliminar subtotales y combertir fechas-------------------------------"""
@@ -176,15 +204,22 @@ data_Materia_informe=data_Materias[['Material', 'Texto breve de material', 'Gpo.
        'Lote',  'Libre utilización', 'En control calidad','UMB', 'Valor libre util.', 'Valor en insp.cal.','Cad./FPC']]
 
 data_Materia_informe_vencidos=data_Materias_vencidos[['Grupo art.', 'Denom.gr.artíc.', 'Material', 'Texto breve de material',
-       'Gpo.artíc.', 'Ce.', 'Alm.', 'Lote', 'UMB',
+       'Gpo.artíc.', 'Ce.', 'Alm.', 'Lote','Bloqueado','Stock no libre', 'UMB','Valor stock bloq.', 'Valor no libre',
        'Cad./FPC']]
 
-"""-----------------------------GENERO SUBTOTALES------------------------------------------------------------"""
+"""-----------------------------GENERO SUBTOTALES MATERIAS PRIMAS------------------------------------------------------------"""
 
 data_Materia_Libre=Clean_column_number(data_Materias["Valor libre util."]).sum()
 data_Materia_Calidad=Clean_column_number(data_Materias['Valor en insp.cal.']).sum()
 Total_Materia=data_Materia_Libre+data_Materia_Calidad
 Total_Materia="${:,.2f}".format(Total_Materia)
+
+
+"""-----------------------------GENERO SUBTOTALES DE MATERIAS PRIMAS VENCIDAS--------------------------------------------------------"""
+data_Materia_Stock_Bloqueado=Clean_column_number(data_Materias_vencidos['Valor stock bloq.']).sum()
+data_Materia_No_Libre=Clean_column_number(data_Materias_vencidos['Valor no libre']).sum()
+Total_Materia_Vencidos=data_Materia_Stock_Bloqueado+data_Materia_No_Libre
+Total_Materia_Vencidos="${:,.2f}".format(Total_Materia_Vencidos)
 
 """Send email"""
 
@@ -273,26 +308,34 @@ def style_df(df):
         .set_table_styles([{'selector': "table,tr,th,td", 'props': [("border", "1px solid"), ('color', '#000'),("text-align","center")]}]) \
 
 html="""
-    <h2 style="text-align: center">REPORTE CADUCIDAD DE GRANELES</h2>
+    <h2 style="text-align: center">"REPORTE GRANELES Y MARIA PRIMA VENCIDO"</h2>
     <p> Por medio del presente informe se evidencia los graneles y materias primas vencidas, para su correspondiente análisis. </p>
 
     <h2 style="color: black;" > GRANELES VENCIDOS</h4>
 
+    <h1 style="color: red;" > {2} </h1>
     <div"> {0} </div>
 
     <h2 style="color: black;" > MATERIA PRIMA VENCIDA </h4>
     
-
+    <h1 style="color: red;" > {3} </h1>
     <div"> {1} </div>
 
 
     <h4> Anticipo sinceros agradecimientos. </h4>
  """
-formato_Graneles = {'Ce.': '{:.0f}',"Alm.":'{:.0f}'}
 
 
 Send = style_df(data_Graneles_Vencidos_informe)  #Style between LI and LS
 Send2=style_df(data_Materia_informe_vencidos)     #Style between LI and LS
-Send=Send.format(formato_Graneles)
-Send2=Send2.format(formato_Graneles)
-send_emails(Send.to_html(),Send2.to_html(),emails=correos,htmlbody=html,subject="REPORTE GRANELES Y MARIA PRIMA VENCIDO")
+
+try:
+    formato_Graneles = {'Ce.': '{:.0f}',"Alm.":'{:.0f}'}
+    formato_material= {'Ce.': '{:.0f}',"Alm.":'{:.0f}',"Lote":'{:.0f}'}
+    # Aplicar el formato a la columna 'Altura'
+    Send = Send.format(formato_Graneles)
+    Send2=Send2.format(formato_material)
+except:
+    None
+
+send_emails(Send.to_html(),Send2.to_html(),Total_Graneles_Vencidos,Total_Materia_Vencidos,emails=correos,htmlbody=html,subject="REPORTE GRANELES Y MARIA PRIMA VENCIDO")
