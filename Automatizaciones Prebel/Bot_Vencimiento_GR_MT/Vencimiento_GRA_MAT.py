@@ -53,7 +53,7 @@ Buscar_MB52_GRANELES=SAP_GUI.Search_MB52(Transsacion,Iniciar,provision,variant)
 Name_GRANELES="GRANELES"  # Name file
 SAP_GUI.Export_TXT2(Name_GRANELES,Iniciar)
 
-Ruta_GRANELES="C:\\Users\\prac.ingindustrial2\\OneDrive - Prebel S.A\\Documentos 1\\SAP\\SAP GUI\\"+str(Name_GRANELES)+".txt"
+Ruta_GRANELES="C:\\Users\\prac.ingindustrial2\\OneDrive - Prebel S.A\\Escritorio\\SAP\\Archivos_CSV\\"+str(Name_GRANELES)+".txt"
 data_GRANELES = pd.read_csv(Ruta_GRANELES, skiprows=1, delimiter='\t')
 
 data_GRANELES=Clean_Columns(data_GRANELES)
@@ -71,10 +71,9 @@ data_GRANELES=Date_Null(data_GRANELES,data_GRANELES['Cad./FPC'])
 data_GRANELES=data_GRANELES[data_GRANELES.Material.notnull()]
 data_GRANELES["Cad./FPC"]=data_GRANELES["Cad./FPC"].apply(lambda x: datetime.strptime(x,'%d.%m.%Y'))  #Change columns str to datetime
 
-Data_Denominacion=Clean_Columns(pd.read_csv("C:\\Users\\prac.ingindustrial2\\OneDrive - Prebel S.A\\Documentos 1\\SAP\\SAP GUI\\Denominacion_Articulos.txt",delimiter='\t'))[["Grupo art.","Denom.gr.artíc."]]
-
+Data_Denominacion=Clean_Columns(pd.read_csv("C:\\Users\\prac.ingindustrial2\\OneDrive - Prebel S.A\\Documentos 1\\SAP\\SAP GUI\\Denominacion_Articulos.txt",delimiter='\t'))[["Grupo art.","Denominación 2 del gr.artículos"]]
+Data_Denominacion=Data_Denominacion.rename(columns={"Denominación 2 del gr.artículos":"Denom.gr.artíc."})
 data_GRANELES=pd.merge(Data_Denominacion,data_GRANELES,how="right",left_on="Grupo art.",right_on="Gpo.artíc.")
-
 
 """---------------------------------Filtro graneles vencidos-------------------"""
 now=datetime.now()
@@ -90,7 +89,7 @@ data_GRANELES_vencidos["Cad./FPC"]=data_GRANELES_vencidos["Cad./FPC"].dt.date   
 
 # filter dates between now a 30 month later
 now=datetime.now()
-month=timedelta(days=6*30)   # Change limiter day(30 days= 1 month)
+month=timedelta(days=30)   # Change limiter day(30 days= 1 month)
 month=now+month
 mask=(data_GRANELES["Cad./FPC"]>=now) & (data_GRANELES["Cad./FPC"]<=month)
 data_GRANELES=data_GRANELES.loc[mask]
@@ -133,7 +132,7 @@ Buscar_MB52_MATERIAS=SAP_GUI.Search_MB52(Transsacion,Iniciar,provision,variant)
 Name_Materias="MATERIAS"  # Revisar suele no guardar
 SAP_GUI.Export_TXT2(Name_Materias,Iniciar)
 # Pass the route and read file 
-Ruta_Materias="C:\\Users\\prac.ingindustrial2\\OneDrive - Prebel S.A\\Documentos 1\\SAP\\SAP GUI\\"+str(Name_Materias)+".txt"
+Ruta_Materias="C:\\Users\\prac.ingindustrial2\\OneDrive - Prebel S.A\\Escritorio\\SAP\\Archivos_CSV\\"+str(Name_Materias)+".txt"
 data_Materias=pd.read_csv(Ruta_Materias,delimiter="\t")
 # Change, drop and standardize columns
 data_Materias=Clean_Columns(data_Materias)
@@ -258,7 +257,7 @@ send_emails(Send2.to_html(),Total_Materia,emails=correos,htmlbody=html2,subject=
 
 """-------------------------------------Send email material y granel vencidos--------------------------------"""
 
-correos="prac.ingindustrial2@prebel.com.co;juan.murillo@prebel.com.co"
+correos="prac.ingindustrial2@prebel.com.co"
 
 def send_emails(*args,emails="",htmlbody="",subject=""):
     email=emails
