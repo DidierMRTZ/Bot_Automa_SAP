@@ -298,8 +298,8 @@ data=np.array([["Exito",2,3],["Cencosub",4,5]])
 
 
 df3=pd.DataFrame(data,index=["Exito","Cencosub"],columns=["Cliente","ZVMI","FIRME"])
-app = Dash(__name__,external_stylesheets=[dbc.themes.BOOTSTRAP])
 
+app = Dash(__name__,external_stylesheets=[dbc.themes.BOOTSTRAP])
 states_clase_pedido_Exito = Tabla_Agenda_Exito['Clase Pedi'].unique().tolist()
 states_clase_pedido_Cencosub  =Tabla_Agenda_Cencusub['Clase Pedi'].unique().tolist()
 states_clase_plataforma_Exito = Tabla_Agenda_Exito['Plataforma'].unique().tolist()
