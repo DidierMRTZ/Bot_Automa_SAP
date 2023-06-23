@@ -297,7 +297,6 @@ Tabla_Agenda_Cencusub
 
 data=np.array([["Exito",2,3],["Cencosub",4,5]])
 
-
 df3=pd.DataFrame(data,index=["Exito","Cencosub"],columns=["Cliente","ZVMI","FIRME"])
 
 
