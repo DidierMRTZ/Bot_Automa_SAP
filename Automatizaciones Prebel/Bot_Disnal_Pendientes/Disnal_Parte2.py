@@ -350,7 +350,7 @@ states_clase_pedido_Cencosub  =Tabla_Agenda_Cencusub['Clase Pedi'].unique().toli
 states_clase_plataforma_Exito = Tabla_Agenda_Exito['Plataforma'].unique().tolist()
 
 
-app.layout = html.Div(children=[
+Pague_1 = html.Div(children=[
     html.Div(className="row", children=[
         html.Div(className="col-md-6", children=[
             html.H3("Consolidado"),
@@ -387,23 +387,39 @@ app.layout = html.Div(children=[
 
 
 
+
+app.layout = html.Div([
+    html.H1('Reporte Disnal'),
+    dcc.Tabs(id="tabs-example-graph", value='tab-1-example-graph', children=[
+        dcc.Tab(label='Tab One', value='tab-1-example-graph', children=[Pague_1]),
+        dcc.Tab(label='Tab Two', value='tab-2-example-graph'),
+    ]),
+])
+
+
+
 @app.callback(
     Output("Tabla_Agenda_Exito", "data"),
     Output("Tabla entrega CENCOSUB", "data"), 
     Output("Consolidado_Agenda_Exito_Cencosub", "data"), 
     Input("filter_dropdown_Clase_Pedido_E", "value"),
     Input("filter_dropdown_Plataforma_E", "value"),
-    Input("filter_dropdown_Clase_Pedido_CEN", "value")
+    Input("filter_dropdown_Clase_Pedido_CEN", "value"),
+    Input('tabs-example-graph', 'value'),
 )
-def display_table(state,s,states):
-    dff = Tabla_Agenda_Exito[Tabla_Agenda_Exito['Clase Pedi'].isin(state) | Tabla_Agenda_Exito['Plataforma'].isin(s)]
-    dff2 = Tabla_Agenda_Cencusub[Tabla_Agenda_Cencusub['Clase Pedi'].isin(states)]
-    df3["ZVMI"][0]=dff["Cantidad E"].sum()
-    df3["ZVMI"][1]=dff2["Cantidad E"].sum()
-    df3["FIRME"][0]=Lineas_table_dinamica_Exito_entrega-len(dff)
-    df3["FIRME"][1]=Lineas_table_dinamica_Cencosub_entrega-len(dff2)
-    dff3=df3
-    return dff.to_dict("records"),dff2.to_dict("records"),dff3.to_dict("records")
+
+def display_table(state,s,states,tab):
+    if tab == 'tab-1-example-graph':
+        dff = Tabla_Agenda_Exito[Tabla_Agenda_Exito['Clase Pedi'].isin(state) | Tabla_Agenda_Exito['Plataforma'].isin(s)]
+        dff2 = Tabla_Agenda_Cencusub[Tabla_Agenda_Cencusub['Clase Pedi'].isin(states)]
+        df3["ZVMI"][0]=dff["Cantidad E"].sum()
+        df3["ZVMI"][1]=dff2["Cantidad E"].sum()
+        df3["FIRME"][0]=Lineas_table_dinamica_Exito_entrega-len(dff)
+        df3["FIRME"][1]=Lineas_table_dinamica_Cencosub_entrega-len(dff2)
+        dff3=df3
+        return dff.to_dict("records"),dff2.to_dict("records"),dff3.to_dict("records")
+    elif tab == 'tab-2-example-graph':
+        return None
 
 
 app.run(host='0.0.0.0', port=8000, debug=False)

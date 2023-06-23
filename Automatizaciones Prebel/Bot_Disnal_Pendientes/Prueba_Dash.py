@@ -49,9 +49,14 @@ def Create_Table(Table,Name_id):
     return(Tabla)
 
 
-
-
-
+def Create_Dropdown(Column_Table,Estados,Name_id):
+        Dropdown=dcc.Dropdown(
+                        id=Name_id,
+                        options=[{"label": st, "value": st} for st in Estados],
+                        placeholder="-Select a State-",
+                        multi=True,
+                        value=Column_Table.unique())
+        return(Dropdown)
 
 
 def estructura(data):
@@ -64,35 +69,33 @@ def estructura(data):
             )
         ])
 
+lista=df3['Cliente'].unique().tolist()
+print(lista)
 app.layout = html.Div([
     html.H1('Dash Tabs component demo'),
     dcc.Tabs(id="tabs-example-graph", value='tab-1-example-graph', children=[
-        dcc.Tab(label='Tab One', value='tab-1-example-graph'),
+        dcc.Tab(label='Tab One', value='tab-1-example-graph', children=[
+                Create_Dropdown(df3['Cliente'],lista,"filter_dropdown_Clase_Pedido_CEN"),
+                Create_Table(df3,"Tabla_Agenda_Exito"),          
+    ]),
         dcc.Tab(label='Tab Two', value='tab-2-example-graph'),
     ]),
-    html.Div(id='tabs-content-example-graph'),
-    html.Div(id='table')
-
 ])
 
-
-estruc=estructura([{
-                        'x': [1, 2, 3],
-                        'y': [10, 5, 2],
-                        'type': 'bar'
-                    }])
+@callback(Output("Tabla_Agenda_Exito", "data"),
+          Input('tabs-example-graph', 'value'),
+          Input("filter_dropdown_Clase_Pedido_CEN", "value"),)
 
 
 
-@callback(Output('tabs-content-example-graph', 'children'),
-          #Output('table', 'children'),
-          Input('tabs-example-graph', 'value'))
-          
-def render_content(tab):
+def render_content(tab,estados):
     if tab == 'tab-1-example-graph':
-        return (estruc)
+        dff2 = df3[df3['Cliente'].isin(estados)]
+        return (dff2.to_dict("records"))
     elif tab == 'tab-2-example-graph':
-        return (estruc)
+        dff2 = df3[df3['Cliente'].isin(estados)]
+        return (dff2.to_dict("records"))
     
 
 app.run(host='0.0.0.0', port=8000, debug=False)
+
