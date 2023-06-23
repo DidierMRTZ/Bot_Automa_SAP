@@ -300,14 +300,15 @@ data=np.array([["Exito",2,3],["Cencosub",4,5]])
 
 df3=pd.DataFrame(data,index=["Exito","Cencosub"],columns=["Cliente","ZVMI","FIRME"])
 
+
+        
 def Create_Table(Table,Name_id):
     """
     - Table: Dataframe referencia a tabla
     - Name_id: Id de la tabla
     - Alias_libreria: Libreria Dash dash_table as dt
     """ 
-    return(  
-        dt.DataTable(
+    Tabla=dt.DataTable(
             id=Name_id,
             columns=[{"name": i, "id": i} for i in Table.columns],
             data=Table.to_dict("records"),
@@ -331,24 +332,31 @@ def Create_Table(Table,Name_id):
                 'padding': '5px',
                 'width': '20px'
             },
-        ),
-    )
+            )
+    return(Tabla)
 
-
-
+def Create_Dropdown(Column_Table,Estados,Name_id):
+        Dropdown=dcc.Dropdown(
+                        id=Name_id,
+                        options=[{"label": st, "value": st} for st in Estados],
+                        placeholder="-Select a State-",
+                        multi=True,
+                        value=Column_Table.unique())
+        return(Dropdown)
 
 
 app = Dash(__name__,external_stylesheets=[dbc.themes.BOOTSTRAP])
 states_clase_pedido_Exito = Tabla_Agenda_Exito['Clase Pedi'].unique().tolist()
 states_clase_pedido_Cencosub  =Tabla_Agenda_Cencusub['Clase Pedi'].unique().tolist()
 states_clase_plataforma_Exito = Tabla_Agenda_Exito['Plataforma'].unique().tolist()
-tabla1=Create_Table(df3,"table-container")
+
+
 app.layout = html.Div(children=[
     html.Div(className="row", children=[
         html.Div(className="col-md-6", children=[
             html.H3("Consolidado"),
             html.Div(children=[
-                tabla1[0],
+                Create_Table(df3,"Consolidado_Agenda_Exito_Cencosub"),
             ]),
         ]),
     ]),
@@ -357,97 +365,33 @@ app.layout = html.Div(children=[
             html.Div(className="row justify-content", children=[
                 html.Div(className="col-md-6 w-50 mx-auto", children=[
                     html.Label(['Clase Pedido'], style={'font-weight': 'bold', "text-align": "center"}),
-                    dcc.Dropdown(
-                        id="filter_dropdown_Clase_Pedido_E",
-                        options=[{"label": st, "value": st} for st in states_clase_pedido_Exito],
-                        placeholder="-Select a State-",
-                        multi=True,
-                        value=Tabla_Agenda_Exito['Clase Pedi'].unique()
-                    ),
+                    Create_Dropdown(Tabla_Agenda_Exito['Clase Pedi'],states_clase_pedido_Exito,"filter_dropdown_Clase_Pedido_E"),  #Creamos Dropsown
                 ]),
                 html.Div(className="col-md-6 w-50 mx-auto", children=[
                     html.Label(['Plataforma'], style={'font-weight': 'bold', "text-align": "center"}),
-                    dcc.Dropdown(
-                        id="filter_dropdown_Plataforma_E",
-                        options=[{"label": st, "value": st} for st in states_clase_plataforma_Exito],
-                        placeholder="-Select a State-",
-                        multi=True,
-                        value=Tabla_Agenda_Exito['Plataforma'].unique()
-                    ),
+                    Create_Dropdown(Tabla_Agenda_Exito['Plataforma'],states_clase_plataforma_Exito,"filter_dropdown_Plataforma_E"),   #Creamos Dropdown
                 ]),
             ]),
             html.Br(),
-            html.H3("Tabla entrega EXITO"),                                          
-            dt.DataTable(
-                id="table-container",
-                columns=[{"name": i, "id": i} for i in Tabla_Agenda_Exito.columns],
-                data=Tabla_Agenda_Exito.to_dict("records"),
-                style_data={
-                    'fontSize':'11px'
-                },
-                style_table={
-                    'margin': '0 auto',
-                    'border': '1px solid black',
-                    'borderCollapse': 'collapse'
-                },
-                style_header={
-                    'fontSize':'11px',
-                    'backgroundColor': '#4074D5',
-                    'fontWeight': 'bold',
-                    'border': '1px solid black'
-                },
-                style_cell={
-                    'textAlign': 'center',
-                    'border': '1px solid black',
-                    'padding': '5px',
-                    'width': '20px'
-                },
-            ),
+            html.H3("Tabla entrega EXITO"),
+            Create_Table(Tabla_Agenda_Exito,"Tabla_Agenda_Exito"),    #Crear Tabla_Agenda_Exito                                      
         ]),    
         html.Div(className="col-md-6 w-50 mx-auto", children=[
             html.Label(['Clase Pedido'], style={'font-weight': 'bold', "text-align": "start"}),
-            dcc.Dropdown(
-                id="filter_dropdown_Clase_Pedido_CEN",  style={'font-size': 15,'width': '60%'},
-                options=[{"label": st, "value": st} for st in states_clase_pedido_Cencosub],
-                placeholder="-Select a State-",
-                multi=True,
-                value=Tabla_Agenda_Cencusub['Clase Pedi'].unique()
-            ),
+            Create_Dropdown(Tabla_Agenda_Cencusub['Clase Pedi'],states_clase_pedido_Cencosub,"filter_dropdown_Clase_Pedido_CEN"),
             html.Br(),
             html.H3("Tabla entrega CENCOSUB"),
-            dt.DataTable(
-                id="table-container2",
-                columns=[{"name": i, "id": i} for i in Tabla_Agenda_Cencusub.columns],
-                data=Tabla_Agenda_Cencusub.to_dict("records"),
-                style_data={
-                    'fontSize':'11px'
-                },
-                style_table={
-                    'margin': '0 auto',
-                    'border': '1px solid black',
-                    'borderCollapse': 'collapse'
-                },
-                style_header={
-                    'fontSize':'11px',
-                    'backgroundColor': '#4074D5',
-                    'fontWeight': 'bold',
-                    'border': '1px solid black'
-                },
-                style_cell={
-                    'textAlign': 'center',
-                    'border': '1px solid black',
-                    'padding': '5px',
-                    'width': '20px'
-                }
-            ),
+            Create_Table(Tabla_Agenda_Cencusub,"Tabla entrega CENCOSUB"),
         ]),   
     ]),
 ])
 
+
+
 @app.callback(
-    Output("table-container", "data"),
-    Output("table-container2", "data"), 
-    Output("table-container3", "data"), 
+    Output("Tabla_Agenda_Exito", "data"),
+    Output("Tabla entrega CENCOSUB", "data"), 
+    Output("Consolidado_Agenda_Exito_Cencosub", "data"), 
     Input("filter_dropdown_Clase_Pedido_E", "value"),
     Input("filter_dropdown_Plataforma_E", "value"),
     Input("filter_dropdown_Clase_Pedido_CEN", "value")
