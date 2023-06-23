@@ -13,6 +13,7 @@ from dash.dependencies import Input
 from dash.dependencies import Output
 import numpy as np
 import dash_bootstrap_components as dbc
+#from Dash_Table import Create_Table
 
 
 """----------------------------Inciar session----------------------------------------------------"""
@@ -299,41 +300,55 @@ data=np.array([["Exito",2,3],["Cencosub",4,5]])
 
 df3=pd.DataFrame(data,index=["Exito","Cencosub"],columns=["Cliente","ZVMI","FIRME"])
 
+def Create_Table(Table,Name_id):
+    """
+    - Table: Dataframe referencia a tabla
+    - Name_id: Id de la tabla
+    - Alias_libreria: Libreria Dash dash_table as dt
+    """ 
+    return(  
+        dt.DataTable(
+            id=Name_id,
+            columns=[{"name": i, "id": i} for i in Table.columns],
+            data=Table.to_dict("records"),
+            style_data={
+            'fontSize':'11px'
+            },
+            style_table={
+                'margin': '0 auto',
+                'border': '1px solid black',
+                'borderCollapse': 'collapse'
+            },
+            style_header={
+                'fontSize':'11px',
+                'backgroundColor': '#4074D5',
+                'fontWeight': 'bold',
+                'border': '1px solid black'
+            },
+            style_cell={
+                'textAlign': 'center',
+                'border': '1px solid black',
+                'padding': '5px',
+                'width': '20px'
+            },
+        ),
+    )
+
+
+
+
+
 app = Dash(__name__,external_stylesheets=[dbc.themes.BOOTSTRAP])
 states_clase_pedido_Exito = Tabla_Agenda_Exito['Clase Pedi'].unique().tolist()
 states_clase_pedido_Cencosub  =Tabla_Agenda_Cencusub['Clase Pedi'].unique().tolist()
 states_clase_plataforma_Exito = Tabla_Agenda_Exito['Plataforma'].unique().tolist()
-
+tabla1=Create_Table(df3,"table-container")
 app.layout = html.Div(children=[
     html.Div(className="row", children=[
         html.Div(className="col-md-6", children=[
             html.H3("Consolidado"),
             html.Div(children=[
-                dt.DataTable(
-                    id="table-container3",
-                    columns=[{"name": i, "id": i} for i in df3.columns],
-                    data=df3.to_dict("records"),
-                    style_data={
-                    'fontSize':'11px'
-                    },
-                    style_table={
-                        'margin': '0 auto',
-                        'border': '1px solid black',
-                        'borderCollapse': 'collapse'
-                    },
-                    style_header={
-                        'fontSize':'11px',
-                        'backgroundColor': '#4074D5',
-                        'fontWeight': 'bold',
-                        'border': '1px solid black'
-                    },
-                    style_cell={
-                        'textAlign': 'center',
-                        'border': '1px solid black',
-                        'padding': '5px',
-                        'width': '20px'
-                    },
-                ),
+                tabla1[0],
             ]),
         ]),
     ]),
