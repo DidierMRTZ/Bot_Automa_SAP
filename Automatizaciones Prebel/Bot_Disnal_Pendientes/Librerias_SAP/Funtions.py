@@ -16,14 +16,34 @@ def Clean_num(x):
     return(x)
 
 """------------------------------------------FUNCION PARA COMPLETAR los 10 con 00 al inicio---------------------------------------"""
-def Complete_00(lista):
-    Nueva_Lista_Ordenes=[]
-    for i in lista:
-        while len(str(i))<10:
-            i="0"+i
-            # print(len(str(i)),i)
-        Nueva_Lista_Ordenes.append(str(i))
-    return(Nueva_Lista_Ordenes)
+def Complete_00(valor):
+    while len(str(valor))<10:
+        valor="0"+valor
+    return(valor)
+
+
+
+def complete_pedidos(Dataset,Agenda):
+     """
+     -Dataset: Entrego columna 
+     -Agenda: Agenda con los valores a encontrar
+     (Requiere funcion Complete_00)
+     """
+     lista=[]
+     Agenda='^'+("|^").join(Agenda)
+     for i in Dataset:
+          if re.findall(f'({Agenda})',i)!=[]:
+               # Encuentra longuitud de 
+               if len(i)>=8 and len(i)<=9:
+                    i=Complete_00(i)
+                    lista.append(i)
+               else:
+                    lista.append(i)
+          else:
+               lista.append(i)
+     return(lista)
+
+
 
 def default_column(default_columns,dataframe):     #Parametros (default_columns: Columnas predeterminadas,dataframe:)
     diccionay_default_column={}
@@ -61,20 +81,37 @@ def Clean_int_to_str(*args):
 
 # Ecluir Agenda de pedidos exito
 
-def Datos_Agenda(data_pedido,Agenda):   #(data_pedido: columna dataframe a transformar, Agenda: Datos a encontrar)
+def Search_Agenda_Exito(data_pedido,Agenda):
+    """
+    data_pedido: colummna dataframe de pedidos
+    Agenda: Lista de agenda a bucar
+    (Agenda Exito)
+    """
+    Agenda='^'+("|^").join(Agenda)
     Exluidos_Entrega=set()
+    data_pedido=set(data_pedido)
     for i in data_pedido:
-        if (str(i)[:4] in Agenda) or (str(i)[:3] in Agenda):
+        # Si cumple la condicion de float elimino .0
+        if re.findall(f'({Agenda})',i)!=[]:
             Exluidos_Entrega.add(i)
-    return(Exluidos_Entrega)
+    return(list(Exluidos_Entrega))
 
 
-def Search_agenda(data_Pedidos,agenda):
+def Search_agenda_Cencosub(data_Pedidos,agenda):
+    """
+    data_pedido: colummna dataframe de pedidos
+    Agenda: Lista de agenda a bucar
+    (Agenda Cencosub)
+    """
+    data_Pedidos=set(data_Pedidos)
     conjunto_agenda=set()
     for i in data_Pedidos:
         if re.findall("(\d*)-",str(i))!=[] and (re.findall("(\d*)-",str(i))[0] in agenda):
             conjunto_agenda.add(i)
-    return(conjunto_agenda)
+    return(list(conjunto_agenda))
+
+
+
 
 # lista json de channles
 
@@ -100,3 +137,17 @@ def stand_day(day):
     day.reverse()
     day=".".join(day)
     return(day)
+
+
+def Estandarizo_Pedidos(*args):    
+    """
+    -args: paso las columnas de interes que estan en formato int con .0 (Puede recibir Null)
+    """
+    lista=[] 
+    for arg in args:
+        args=arg.apply(lambda x: str(x).replace('.0',"") if type(x)==float else x)
+        lista.append(args)
+    if len(lista)==1:
+        return lista[0]
+    else:
+        return(tuple(lista))
