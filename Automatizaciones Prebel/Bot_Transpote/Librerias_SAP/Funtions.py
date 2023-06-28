@@ -23,6 +23,26 @@ def Complete_00(valor):
 
 
 
+def complete_pedidos(Dataset,Agenda):
+     """
+     -Dataset: Entrego columna 
+     -Agenda: Agenda con los valores a encontrar
+     (Requiere funcion Complete_00)
+     """
+     lista=[]
+     Agenda='^'+("|^").join(Agenda)
+     for i in Dataset:
+          if re.findall(f'({Agenda})',i)!=[]:
+               # Encuentra longuitud de 
+               if len(i)>=8 and len(i)<=9:
+                    i=Complete_00(i)
+                    lista.append(i)
+               else:
+                    lista.append(i)
+          else:
+               lista.append(i)
+     return(lista)
+
 
 
 def default_column(default_columns,dataframe):     #Parametros (default_columns: Columnas predeterminadas,dataframe:)
