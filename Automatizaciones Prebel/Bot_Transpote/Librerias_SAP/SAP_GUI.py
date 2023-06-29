@@ -363,3 +363,40 @@ def Search_ZSD10(transsaccion,Series,variant,provision,session):
         return(tabla)
     except:
         return(session)
+    
+def Search_ZSD76(Transsaccion,session,provision,variant):
+    """
+    DETALLE DE ENTREGAS
+    Transsaccion: Transsacion a buscar
+    session: session activa
+    provision: disposicion de interes
+    variant: Variante a buscar
+    """
+    session.StartTransaction(Transsaccion)
+    session.findById("wnd[0]/tbar[1]/btn[17]").press()
+    session.findById("wnd[1]/usr/txtV-LOW").text = provision
+    session.findById("wnd[1]/usr/txtENAME-LOW").text = variant
+    session.findById("wnd[1]/usr/txtV-LOW").caretPosition = 8
+    session.findById("wnd[1]/tbar[0]/btn[8]").press()
+    session.findById("wnd[0]/tbar[1]/btn[8]").press()
+    return(session)
+
+
+def Search_Pedidos_ZSD127(Transsaccion,Series,session,Variant,provision=None):     
+    """
+    SEGUIMIENTO DE ESTADO DE PEDIDOS
+    Transsaccion: Transsacion a buscar
+    Series: Columna del dataframe que quiero copiar
+    session: session del usuario
+    Variant: Variante de visualizacion
+    provision: disposicion o Layout
+    """
+    session.StartTransaction(Transsaccion)
+    Search_table_Variant(session,Variant)
+    Series=Series.to_clipboard(index=False, header=False)
+    session.findById("wnd[0]/usr/btn%_SP$00004_%_APP_%-VALU_PUSH").press()
+    session.findById("wnd[1]/tbar[0]/btn[24]").press()
+    session.findById("wnd[1]/tbar[0]/btn[8]").press()
+    if provision!=None:
+        session.findById("wnd[0]/usr/ctxt%LAYOUT").text = provision
+    session.findById("wnd[0]/tbar[1]/btn[8]").press()
