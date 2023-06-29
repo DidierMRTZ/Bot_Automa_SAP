@@ -383,7 +383,7 @@ def Search_ZSD76(Transsaccion,session,provision,variant):
     return(session)
 
 
-def Search_Pedidos_ZSD127(Transsaccion,Series,session,Variant,provision=None):      #(column Dataframe)
+def Search_Pedidos_ZSD127(Transsaccion,Series,session,Variant,provision=None):     
     """
     SEGUIMIENTO DE ESTADO DE PEDIDOS
     Transsaccion: Transsacion a buscar
