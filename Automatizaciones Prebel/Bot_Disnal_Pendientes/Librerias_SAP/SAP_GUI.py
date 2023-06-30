@@ -427,3 +427,47 @@ def Search_ZSD79(Transsaccion,Series,session):      #(column Dataframe)
     session.findById("wnd[0]/tbar[1]/btn[8]").press()
     table=session.findById("wnd[0]/usr/cntlGRID1/shellcont/shell")
     return(table)
+
+def Export_TXT(Name,session,Ruta=None):
+    try:
+        session.findById("wnd[0]/mbar/menu[0]/menu[3]/menu[2]").select()
+    except:
+        pass
+    finally:
+        session.findById("wnd[1]/usr/subSUBSCREEN_STEPLOOP:SAPLSPO5:0150/sub:SAPLSPO5:0150/radSPOPLI-SELFLAG[1,0]").select()
+        session.findById("wnd[1]/tbar[0]/btn[0]").press()
+        if Ruta==None:
+            session.findById("wnd[1]/usr/ctxtDY_PATH").text = "C:\\Users\\prac.ingindustrial2\\OneDrive - Prebel S.A\\Escritorio\\SAP\\Archivos_CSV\\"
+        else:
+            session.findById("wnd[1]/usr/ctxtDY_PATH").text = Ruta
+        session.findById("wnd[1]/usr/ctxtDY_FILENAME").text = str(Name) + ".txt"
+        session.findById("wnd[1]/usr/ctxtDY_FILE_ENCODING").text = "4310"
+        session.findById("wnd[1]/tbar[0]/btn[11]").press()
+
+def Search_Table_ZSD79(table,session):
+    """
+    -table: Tabla ZSD79
+    -session: session
+    (Busca filtro especial de colores)
+    """
+    #Columna Pedido concluido 
+    table.SelectColumn("LFGSK")
+    #Columna entregas concluidas
+    table.SelectColumn("WBSTK")
+    session.findById("wnd[0]/mbar/menu[1]/menu[3]").select() 
+    session.findById("wnd[1]/usr/ssub%_SUBSCREEN_FREESEL:SAPLSSEL:1105/ctxt%%DYN001-LOW").text = "@0A@"  #Rojo Pedido
+    session.findById("wnd[1]/usr/ssub%_SUBSCREEN_FREESEL:SAPLSSEL:1105/ctxt%%DYN002-LOW").text = "@08@"  #Verde Entrega
+    session.findById("wnd[1]/tbar[0]/btn[0]").press()
+    Row=table.RowCount
+    dic={"Nº Pedido cliente":[],"Clase Orden":[],"PrimFecEnt":[],"ÚltEntrega":[]}
+    for i in range(0,Row):
+        #Nº Pedido cliente Col "BSTNK"
+        #Clase Orden Col "AUART"
+        #PrimFecEnt Col "AUDAT"
+        #ÚltEntrega Col "VDATU"
+        Pedido_cliente,Clase_Orden,PrimFecEnt,ÚltEntrega=table.GetCellValue(i,"BSTNK"),table.GetCellValue(2,"AUART"),table.GetCellValue(2,"AUDAT"),table.GetCellValue(2,"VDATU") 
+        dic["Nº Pedido cliente"].append(Pedido_cliente)
+        dic["Clase Orden"].append(Clase_Orden)
+        dic["PrimFecEnt"].append(PrimFecEnt)
+        dic["ÚltEntrega"].append(ÚltEntrega)
+    return(pd.DataFrame(dic))
