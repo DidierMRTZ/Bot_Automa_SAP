@@ -401,3 +401,29 @@ def Search_Pedidos_ZSD127(Transsaccion,Series,session,Variant,provision=None):
     if provision!=None:
         session.findById("wnd[0]/usr/ctxt%LAYOUT").text = provision
     session.findById("wnd[0]/tbar[1]/btn[8]").press()
+
+def Search_VA05N(Transsaccion,session,provision,variant):
+    session.StartTransaction(Transsaccion)
+    session.findById("wnd[0]/tbar[1]/btn[17]").press()
+    session.findById("wnd[1]/usr/txtV-LOW").text = provision
+    session.findById("wnd[1]/usr/txtENAME-LOW").text = variant
+    session.findById("wnd[1]/usr/txtV-LOW").caretPosition = 8
+    session.findById("wnd[1]/tbar[0]/btn[8]").press()
+    session.findById("wnd[0]/tbar[1]/btn[8]").press()
+    return(session)
+
+def Search_ZSD79(Transsaccion,Series,session):      #(column Dataframe)
+    """
+    Transsaccion: Transsacion a buscar
+    Series: Columna del dataframe que quiero copiar
+    session: session del usuario
+    provision: disposicion de interes
+    """
+    session.StartTransaction(Transsaccion)
+    Series=Series.to_clipboard(index=False, header=False)
+    session.findById("wnd[0]/usr/btn%_SO_BSTKD_%_APP_%-VALU_PUSH").press()
+    session.findById("wnd[1]/tbar[0]/btn[24]").press()
+    session.findById("wnd[1]/tbar[0]/btn[8]").press()
+    session.findById("wnd[0]/tbar[1]/btn[8]").press()
+    table=session.findById("wnd[0]/usr/cntlGRID1/shellcont/shell")
+    return(table)
