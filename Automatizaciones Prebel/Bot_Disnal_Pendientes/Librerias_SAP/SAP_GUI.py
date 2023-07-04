@@ -9,6 +9,7 @@ import os
 import pywintypes
 from pywinauto.application import Application
 import pyautogui
+import pandas as pd
 #Iniciar sesión
 # Input= Usuario y contraseña y output= session
 
@@ -471,3 +472,4 @@ def Search_Table_ZSD79(table,session):
         dic["PrimFecEnt"].append(PrimFecEnt)
         dic["ÚltEntrega"].append(ÚltEntrega)
     return(pd.DataFrame(dic))
+
