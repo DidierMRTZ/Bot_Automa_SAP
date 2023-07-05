@@ -131,7 +131,7 @@ def Estandarizo_Pedidos(*args):
         return lista[0]
     else:
         return(tuple(lista))
-    
+
 def complete_pedidos(Dataset,Agenda):
      """
      -Dataset: Entrego columna 
@@ -141,13 +141,13 @@ def complete_pedidos(Dataset,Agenda):
      lista=[]
      Agenda='^'+("|^").join(Agenda)
      for i in Dataset:
-          if re.findall(f'({Agenda})',i)!=[]:
+          if re.findall(f'({Agenda})',str(i))!=[]:
                # Encuentra longuitud de 
-               if len(i)>=8 and len(i)<=9:
-                    i=Complete_00(i)
-                    lista.append(i)
+               if len(str(i))>=8 and len(str(i))<=9:
+                    i=Complete_00(str(i))
+                    lista.append(str(i))
                else:
-                    lista.append(i)
+                    lista.append(str(i))
           else:
-               lista.append(i)
+               lista.append(str(i))
      return(lista)
