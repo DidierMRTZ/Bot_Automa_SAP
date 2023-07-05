@@ -18,11 +18,8 @@ def Clean_num(x):
 """------------------------------------------FUNCION PARA COMPLETAR los 10 con 00 al inicio---------------------------------------"""
 def Complete_00(valor):
     while len(str(valor))<10:
-        valor="0"+valor
+        valor="0"+str(valor)
     return(valor)
-
-
-
 
 
 def default_column(default_columns,dataframe):     #Parametros (default_columns: Columnas predeterminadas,dataframe:)
